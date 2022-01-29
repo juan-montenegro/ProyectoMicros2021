@@ -2,7 +2,7 @@
  * radar ultrasonido.c
  *
  * Created: 28/01/2022 4:44:55 p. m.
- * Author : camilo chavez, Esteban Montenegro, Franciscos Mejia
+ * Author : Camilo Chavez, Esteban Montenegro, Francisco Mejia
  */ 
 
 
@@ -25,9 +25,36 @@ int main(void)
 	DDRA = 0x00;
 	DDRC = 0x0F;
 	
+	//Iniciación de variables 
+	float anguloMotor=0;
+	float *anguloReal;
+	char cadena[10];
+	
 	while(1)
 	{
 		//TODO:: Please write your application code
-		driveStepper();
+		for(int i=0;i<16;i++){	
+			
+			//SE LLAMA LA FUNCION ULTRASONIDO 
+			driveStepperOclock(&anguloReal,anguloMotor); //se mueve el motor 22.5 angulo
+			
+			sprintf(cadena,"\n\rAngulo:\n\r");
+			Uart_write_txt(cadena);
+				
+		}
+			
+		PORTC = 0x09;		/* Last step to initial position */
+		_delay_ms(1000);
+		
+		for(int i=0;i<16;i++){	
+			
+			//SE LLAMA LA FUNCION ULTRASONIDO 
+			driveStepperAnticlock(&anguloReal,anguloMotor);
+			sprintf(cadena,"\n\rAngulo\n\r");
+			Uart_write_txt(cadena);
+		}
+		
+		PORTC = 0x09;
+		_delay_ms(1000);
 	}
 }
