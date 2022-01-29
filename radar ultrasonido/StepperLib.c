@@ -23,67 +23,89 @@ int isButtonPressed(unsigned char bitPos)
 }
 
 ////////////////////////////////////////////////////
-void driveStepper(float *angulo)
+void driveStepperOclock(float *angulo, float anguloMotor)
 {
 	int period;	
 	period = 100;
 	
-	float anguloMotor=0;
-	(*angulo) = anguloMotor;
+	(*angulo)= anguloMotor;
 	
-	for(int i=0;i<16;i++)
-	{
-		PORTC = 0x09;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x08;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x0C;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x04;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x06;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x02;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x03;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-		PORTC = 0x01;
-		anguloMotor +=2.8125;
-		_delay_ms(period);
-	}
-	PORTC = 0x09;		/* Last step to initial position */
+	PORTC = 0x09;
+	anguloMotor +=2.8125;
 	_delay_ms(period);
-	_delay_ms(1000);
+
+	PORTC = 0x08;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+
+	PORTC = 0x0C;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+		
+	PORTC = 0x04;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+
+	PORTC = 0x06;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+		
+	PORTC = 0x02;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+		
+	PORTC = 0x03;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+	
+	PORTC = 0x01;
+	anguloMotor +=2.8125;
+	_delay_ms(period);
+	
+	
 
 	/* Rotate Stepper Motor Anticlockwise with Full step sequence */
-	for(int i=0;i<16;i++)
-	{
-		PORTC = 0x09;
-		_delay_ms(period);
-		PORTC = 0x01;
-		_delay_ms(period);
-		PORTC = 0x03;
-		_delay_ms(period);
-		PORTC = 0x02;
-		_delay_ms(period);
-		PORTC = 0x06;
-		_delay_ms(period);
-		PORTC = 0x04;
-		_delay_ms(period);
-		PORTC = 0x0C;
-		_delay_ms(period);
-		PORTC = 0x08;
-		_delay_ms(period);
-	}
+	
+		
+}
+
+void driveStepperAnticlock(float *angulo, float anguloMotor){
+	int period;
+	period = 100;
+	
+	(*angulo)= anguloMotor;
+	
 	PORTC = 0x09;
+	anguloMotor -=2.8125;
 	_delay_ms(period);
-	_delay_ms(1000);
+	
+	PORTC = 0x01;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+	
+	PORTC = 0x03;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+
+	PORTC = 0x02;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+	
+	PORTC = 0x06;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+
+	PORTC = 0x04;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+	
+	PORTC = 0x0C;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+
+	PORTC = 0x08;
+	anguloMotor -=2.8125;
+	_delay_ms(period);
+
 }
 
