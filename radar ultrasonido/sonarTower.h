@@ -1,6 +1,6 @@
 // Tower operation functions.
 
-#define		F_CPU	4000000L
+#define		F_CPU	8000000L
 #include	<util/delay.h>
 #define		TRIGGER		10
 
