@@ -54,7 +54,7 @@ int main(void)
 	// Port init
 	DDRA = 0x00;
 	DDRB |= (1 << 0);
-	DDRB |= (1 << 5);
+	DDRD |= (1 << 5);
 	DDRC = 0x0F;
 	
 	//iniciacion de variables 

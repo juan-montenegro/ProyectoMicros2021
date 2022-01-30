@@ -334,10 +334,10 @@ int main(void)
      23c:	87 b3       	in	r24, 0x17	; 23
      23e:	81 60       	ori	r24, 0x01	; 1
      240:	87 bb       	out	0x17, r24	; 23
-	DDRB |= (1 << 5);
-     242:	87 b3       	in	r24, 0x17	; 23
+	DDRD |= (1 << 5);
+     242:	81 b3       	in	r24, 0x11	; 17
      244:	80 62       	ori	r24, 0x20	; 32
-     246:	87 bb       	out	0x17, r24	; 23
+     246:	81 bb       	out	0x11, r24	; 17
 	DDRC = 0x0F;
      248:	8f e0       	ldi	r24, 0x0F	; 15
      24a:	84 bb       	out	0x14, r24	; 20
