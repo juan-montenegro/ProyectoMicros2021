@@ -7,4 +7,4 @@
 
 int isButtonPressed(unsigned char bitPos);
 float driveStepperOclock(float anguloMotor);
-void driveStepperAnticlock(float *angulo, float anguloMotor);
+float driveStepperAnticlock(float anguloMotor);

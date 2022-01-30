@@ -12,12 +12,15 @@
 #define F_CPU 4000000UL
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <stdio.h>
+#include <math.h>
+
 
 
 int main(void)
 {
 	//Uart iniciacion
-	uart_init();
+	uart_init(19200);
 	
 		/* Set period in between two steps */
 	
@@ -25,11 +28,11 @@ int main(void)
 	DDRA = 0x00;
 	DDRC = 0x0F;
 	
-	//Iniciación de variables 
+	//iniciacion de variables 
 	float anguloMotor=0;
-	float *anguloReal;
+	//float *anguloReal;
 	char cadena[12];
-	float auxiliar;
+	//float auxiliar;
 	
 	while(1)
 	{
@@ -38,7 +41,7 @@ int main(void)
 			
 			//SE LLAMA LA FUNCION ULTRASONIDO 
 			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
-			sprintf(cadena,"\n\rAngulo: %d\r\n", anguloMotor);
+			sprintf(cadena,"\n\rAngulo: %f\r\n", anguloMotor);
 			Uart_write_txt(cadena);
 				
 		}
@@ -49,8 +52,8 @@ int main(void)
 		for(int i=0;i<16;i++){	
 			
 			//SE LLAMA LA FUNCION ULTRASONIDO 
-			driveStepperAnticlock(&anguloReal,anguloMotor);
-			sprintf(cadena,"\n\rAngulo: %d\r\n", (*anguloReal));
+			anguloMotor=driveStepperAnticlock(anguloMotor);
+			sprintf(cadena,"\n\rAngulo: %f\r\n", anguloMotor);
 			Uart_write_txt(cadena);
 		}
 		

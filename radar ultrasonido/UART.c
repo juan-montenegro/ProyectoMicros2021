@@ -8,7 +8,10 @@
 #include <avr/io.h>
 #include "UART.h"
 
-void uart_init(){
+#define F_CPU 4000000UL
+#define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
+
+void uart_init(long USART_BAUDRATE){
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
 	// USART Transmitter: On
@@ -21,8 +24,8 @@ void uart_init(){
 	UCSRA = 0X00;// inicializa en 0
 	UCSRB |= (1<<RXEN) | (1<<TXEN); // funciona como receptor y transmisor
 	UCSRC |= (1<<URSEL) | (1<<UCSZ1) | (1<<UCSZ0); //URSEL registro activado, tamaño 8 bits
-	UBRRH = 0x00; //PARTE ALTA DE LA VELOCIDAD DE COMUNICACIÓN
-	UBRRL = 0x19; //PARTE BAJA DE LA VELOCIDAD DE COMUNICACIÓN
+	UBRRL = BAUD_PRESCALE;			//PARTE ALTA DE LA VELOCIDAD DE COMUNICACIÓN
+	UBRRH = (BAUD_PRESCALE >> 8);	//PARTE BAJA DE LA VELOCIDAD DE COMUNICACIÓN
 	
 }
 

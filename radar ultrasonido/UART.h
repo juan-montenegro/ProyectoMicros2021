@@ -1,7 +1,7 @@
 
 
 				
-void uart_init(); // iniciar UART
+void uart_init(long USART_BAUDRATE); // iniciar UART
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 

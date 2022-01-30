@@ -60,18 +60,16 @@ float driveStepperOclock(float anguloMotor)
 	anguloMotor +=2.8125;
 	_delay_ms(period);
 	
-	/* Rotate Stepper Motor Anticlockwise with Full step sequence */
+	/* Rotate Stepper Motor Anticlockwise with half step sequence */
 	
 	return anguloMotor;
 		
 }
 
-void driveStepperAnticlock(float *angulo, float anguloMotor){
+float driveStepperAnticlock(float anguloMotor){
 	int period;
 	period = 100;
-	
-	(*angulo)= anguloMotor;
-	
+		
 	PORTC = 0x09;
 	anguloMotor -=2.8125;
 	_delay_ms(period);
@@ -104,5 +102,6 @@ void driveStepperAnticlock(float *angulo, float anguloMotor){
 	anguloMotor -=2.8125;
 	_delay_ms(period);
 
+	return anguloMotor;
 }
 
