@@ -7,7 +7,7 @@
  */ 
 #include <avr/io.h>
 
-#define F_CPU 4000000UL
+#define F_CPU 8000000UL
 #define DELAY_BASE	170
 
 #include <util/delay.h>

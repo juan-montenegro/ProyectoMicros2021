@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include "UART.h"
 
-#define F_CPU 4000000UL
+#define F_CPU 8000000UL
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 void uart_init(long USART_BAUDRATE){
@@ -35,6 +35,7 @@ int Uart_write(unsigned char caracter)
 {
 	while (!(UCSRA & (1 << UDRE))); // si el bit 5 del registro UCSRA es 1, entonces esta disponible para enviar datos TRANSMISION
 	UDR=caracter; //me recibe un char para guardarlo en el registro UDR y enviarlo TRANSMISION
+	while (!(UCSRA & (1 << TXC)));
 }
 
 void Uart_write_txt(char* cadena){

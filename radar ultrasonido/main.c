@@ -9,7 +9,7 @@
 #include <avr/io.h>
 #include "StepperLib.h"
 #include "UART.h"
-#define F_CPU 4000000UL
+#define F_CPU 8000000UL
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
@@ -20,9 +20,9 @@
 int main(void)
 {
 	//Uart iniciacion
-	uart_init(19200);
+	uart_init(9600);
 	
-		/* Set period in between two steps */
+	/* Set period in between two steps */
 	
 	// Port init
 	DDRA = 0x00;
@@ -30,9 +30,9 @@ int main(void)
 	
 	//iniciacion de variables 
 	float anguloMotor=0;
-	//float *anguloReal;
-	char cadena[12];
-	//float auxiliar;
+	char cadena[24];
+	char BUFF[12];
+	float a = 22.5;
 	
 	while(1)
 	{
@@ -41,7 +41,9 @@ int main(void)
 			
 			//SE LLAMA LA FUNCION ULTRASONIDO 
 			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
-			sprintf(cadena,"\n\rAngulo: %f\r\n", anguloMotor);
+			dtostrf(anguloMotor,12,4,BUFF);
+			sprintf(cadena,"\n\rAngulo: %s \r\n", BUFF);
+			_delay_ms(100);
 			Uart_write_txt(cadena);
 				
 		}
@@ -53,7 +55,8 @@ int main(void)
 			
 			//SE LLAMA LA FUNCION ULTRASONIDO 
 			anguloMotor=driveStepperAnticlock(anguloMotor);
-			sprintf(cadena,"\n\rAngulo: %f\r\n", anguloMotor);
+			dtostrf(anguloMotor,12,4,BUFF);
+			sprintf(cadena,"\n\rAngulo: %s \r\n", BUFF);
 			Uart_write_txt(cadena);
 		}
 		
