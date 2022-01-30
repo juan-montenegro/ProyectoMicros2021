@@ -7,7 +7,7 @@
  */ 
 #include <avr/io.h>
 
-#define F_CPU 8000000UL
+#define F_CPU 4000000UL
 #define DELAY_BASE	170
 
 #include <util/delay.h>
@@ -23,13 +23,11 @@ int isButtonPressed(unsigned char bitPos)
 }
 
 ////////////////////////////////////////////////////
-void driveStepperOclock(float *angulo, float anguloMotor)
+float driveStepperOclock(float anguloMotor)
 {
 	int period;	
 	period = 100;
-	
-	(*angulo)= anguloMotor;
-	
+
 	PORTC = 0x09;
 	anguloMotor +=2.8125;
 	_delay_ms(period);
@@ -62,10 +60,9 @@ void driveStepperOclock(float *angulo, float anguloMotor)
 	anguloMotor +=2.8125;
 	_delay_ms(period);
 	
-	
-
 	/* Rotate Stepper Motor Anticlockwise with Full step sequence */
 	
+	return anguloMotor;
 		
 }
 
