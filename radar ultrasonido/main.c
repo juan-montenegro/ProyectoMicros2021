@@ -81,12 +81,10 @@ int main(void)
 			
 			dtostrf(anguloMotor,6,4,BUFF);
 			sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			_delay_ms(100);
 			Uart_write_txt(cadena);
 			
 			dtostrf(rangeSensor,6,4,BUFF2);
 			sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
-			_delay_ms(100);
 			Uart_write_txt(cadena);
 			
 			//Positioning the tower
@@ -111,12 +109,10 @@ int main(void)
 			
 			dtostrf(anguloMotor,6,4,BUFF);
 			sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			_delay_ms(100);
 			Uart_write_txt(cadena);
 			
 			dtostrf(rangeSensor,6,4,BUFF2);
 			sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
-			_delay_ms(100);
 			Uart_write_txt(cadena);
 			
 			//Positioning the tower
