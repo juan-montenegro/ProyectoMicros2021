@@ -6,9 +6,14 @@
  */ 
 
 #include <avr/io.h>
+
 #define F_CPU 8000000UL
+
 #include "stepMotor.h"
+
 #include <util/delay.h>
+#include <avr/interrupt.h>
+
 
 int main(void)
 {

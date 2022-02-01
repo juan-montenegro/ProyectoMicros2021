@@ -42,9 +42,26 @@ Discarded input sections
  .text          0x00000000        0x0 uart.o
  .data          0x00000000        0x0 uart.o
  .bss           0x00000000        0x0 uart.o
- .debug_line    0x00000000        0x0 uart.o
- .debug_str     0x00000000      0x15a uart.o
+ .text.uart_init
+                0x00000000       0x2a uart.o
+ .text.Uart_write
+                0x00000000       0x16 uart.o
+ .text.Uart_write_txt
+                0x00000000       0x1a uart.o
+ .text.isUSARTerror
+                0x00000000       0x26 uart.o
+ .text.UART_read
+                0x00000000       0x12 uart.o
+ .debug_info    0x00000000      0x140 uart.o
+ .debug_abbrev  0x00000000       0xd3 uart.o
+ .debug_loc     0x00000000       0x76 uart.o
+ .debug_aranges
+                0x00000000       0x40 uart.o
+ .debug_ranges  0x00000000       0x30 uart.o
+ .debug_line    0x00000000      0x173 uart.o
+ .debug_str     0x00000000      0x228 uart.o
  .comment       0x00000000       0x31 uart.o
+ .debug_frame   0x00000000       0x70 uart.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)

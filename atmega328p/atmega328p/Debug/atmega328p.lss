@@ -85,7 +85,7 @@ Disassembly of section .text:
   86:	87 b1       	in	r24, 0x07	; 7
   88:	8f 60       	ori	r24, 0x0F	; 15
   8a:	87 b9       	out	0x07, r24	; 7
-#include <util/delay.h>
+
 
 int main(void)
 {
