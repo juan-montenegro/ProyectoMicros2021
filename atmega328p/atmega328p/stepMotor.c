@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////
 int isButtonPressed(unsigned char bitPos)
 {
-	if (PINC6 & bitPos)
+	if (PIND7 & bitPos)
 	return 1;
 	else
 	return 0;

@@ -16,8 +16,8 @@ int main(void)
 	StepValue = 0x01;
 	
 	// Port init
-	DDRC |= (1 << 6);
-	DDRC = 0xff;
+	DDRD |= (1 << 7);
+	DDRC |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
 	
     while (1) 
     {
