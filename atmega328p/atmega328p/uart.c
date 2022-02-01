@@ -14,12 +14,12 @@ void uart_init(){
 	// USART Mode: Asynchronous
 	// USART Baud Rate: 9600
 	
-	DDRD |= (1 << DDD1);// 0b0010, bit 0 de entrada (RXD), bit 1 de salida (TXD)
+	DDRD |= (1 << 1);// 0b0010, bit 0 de entrada (RXD), bit 1 de salida (TXD)
 	PORTD = 0x00;//inicializamos el puerto d en 0
 	
 	UCSR0A = 0X00;// inicializa en 0
 	UCSR0B |= (1<<RXEN0) | (1<<TXEN0); // funciona como receptor y transmisor
-	UCSR0C |= (1<<USBS0) | (1<<UCSZ01) | (1<<UCSZ00); //URSEL registro activado, tamaño 8 bits
+	UCSR0C |= (1 << USBS0) | (1<<UCSZ01) | (1<<UCSZ00); //, tamaño 8 bits
 	UBRR0L = BAUD_VAL;			//PARTE ALTA DE LA VELOCIDAD DE COMUNICACIÓN
 	UBRR0H = (BAUD_VAL >> 8);	//PARTE BAJA DE LA VELOCIDAD DE COMUNICACIÓN
 	
@@ -31,7 +31,6 @@ int Uart_write(unsigned char caracter)
 {
 	while (!(UCSR0A & (1 << UDRE0))); // si el bit 5 del registro UCSRA es 1, entonces esta disponible para enviar datos TRANSMISION
 	UDR0=caracter; //me recibe un char para guardarlo en el registro UDR y enviarlo TRANSMISION
-	while (!(UCSR0A & (1 << TXC0)));
 }
 
 void Uart_write_txt(char* cadena){
