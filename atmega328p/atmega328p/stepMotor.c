@@ -9,9 +9,8 @@
 
 #define F_CPU 8000000UL
 #define DELAY_BASE	170
-
+#define PERIOD (int)10
 #include <util/delay.h>
-#include "stepMotor.h"
 
 
 ////////////////////////////////////////////////////
@@ -24,28 +23,79 @@ int isButtonPressed(unsigned char bitPos)
 }
 
 ////////////////////////////////////////////////////
-unsigned char driveStepper(unsigned char StepValue)
+float driveStepperOclock(float anguloMotor)
 {
+	PORTC = 0x09;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x08;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x0C;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
 	
+	PORTC = 0x04;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x06;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
 	
-	PORTC = StepValue;
+	PORTC = 0x02;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
 	
-	_delay_ms(DELAY_BASE);
+	PORTC = 0x03;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
 	
-	if (!isButtonPressed(0x01))
-	{
-		StepValue <<= 1;
-		
-		if (StepValue == 0x10)
-		StepValue = 0x01;
-	}
-	else
-	{
-		StepValue >>= 1;
-		
-		if (StepValue == 0x00)
-		StepValue = 0x08;
-	}
+	PORTC = 0x01;
+	anguloMotor +=2.8125;
+	_delay_ms(PERIOD);
 	
-	return StepValue;
+	/* Rotate Stepper Motor Anticlockwise with half step sequence */
+	
+	return anguloMotor;
+	
+}
+
+float driveStepperAnticlock(float anguloMotor){
+
+	PORTC = 0x09;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+	
+	PORTC = 0x01;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+	
+	PORTC = 0x03;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x02;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+	
+	PORTC = 0x06;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x04;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+	
+	PORTC = 0x0C;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+
+	PORTC = 0x08;
+	anguloMotor -=2.8125;
+	_delay_ms(PERIOD);
+
+	return anguloMotor;
 }

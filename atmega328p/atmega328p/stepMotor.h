@@ -10,6 +10,7 @@
 #define STEPMOTOR_H_
 
 int isButtonPressed(unsigned char bitPos);
-unsigned char driveStepper(unsigned char StepValue);
+float driveStepperOclock(float anguloMotor);
+float driveStepperAnticlock(float anguloMotor);
 
 #endif /* STEPMOTOR_H_ */
