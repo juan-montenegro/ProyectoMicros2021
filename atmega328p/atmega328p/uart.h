@@ -9,9 +9,9 @@
 #ifndef UART_H_
 #define UART_H_
 
-#define FOSC       16000000UL
+#define FOSC		  8000000UL
 #define BAUD_RATE     9600UL
-#define BAUD_VAL      FOSC/16/BAUD_RATE-1
+#define BAUD_VAL      (FOSC/(BAUD_RATE*16UL)-1)
 
 void uart_init(); // iniciar UART
 

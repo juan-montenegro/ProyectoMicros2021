@@ -7,19 +7,19 @@
 #include <avr/io.h>
 #include "UART.h"
 
-void uart_init(long USART_BAUDRATE){
+void uart_init(){
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
 	// USART Transmitter: On
 	// USART Mode: Asynchronous
 	// USART Baud Rate: 9600
 	
-	DDRD = 0X02;// 0b0010, bit 0 de entrada (RXD), bit 1 de salida (TXD)
-	PORTD= 0x00;//inicializamos el puerto d en 0
+	DDRD |= (1 << DDD1);// 0b0010, bit 0 de entrada (RXD), bit 1 de salida (TXD)
+	PORTD = 0x00;//inicializamos el puerto d en 0
 	
 	UCSR0A = 0X00;// inicializa en 0
 	UCSR0B |= (1<<RXEN0) | (1<<TXEN0); // funciona como receptor y transmisor
-	UCSR0C |= (1<<UMSEL01) | (1<<UCSZ01) | (1<<UCSZ00); //URSEL registro activado, tamaño 8 bits
+	UCSR0C |= (1<<USBS0) | (1<<UCSZ01) | (1<<UCSZ00); //URSEL registro activado, tamaño 8 bits
 	UBRR0L = BAUD_VAL;			//PARTE ALTA DE LA VELOCIDAD DE COMUNICACIÓN
 	UBRR0H = (BAUD_VAL >> 8);	//PARTE BAJA DE LA VELOCIDAD DE COMUNICACIÓN
 	
