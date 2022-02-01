@@ -52,9 +52,24 @@ Discarded input sections
  .text          0x00000000        0x0 hcsr04.o
  .data          0x00000000        0x0 hcsr04.o
  .bss           0x00000000        0x0 hcsr04.o
- .debug_line    0x00000000        0x0 hcsr04.o
- .debug_str     0x00000000      0x15c hcsr04.o
+ .text.configPWMTower
+                0x00000000        0xa hcsr04.o
+ .text.configDistanceTower
+                0x00000000       0x26 hcsr04.o
+ .text.setTrigger
+                0x00000000       0x28 hcsr04.o
+ .text.setTowerMotion
+                0x00000000        0x4 hcsr04.o
+ .debug_info    0x00000000      0x1d5 hcsr04.o
+ .debug_abbrev  0x00000000      0x123 hcsr04.o
+ .debug_loc     0x00000000       0x8d hcsr04.o
+ .debug_aranges
+                0x00000000       0x38 hcsr04.o
+ .debug_ranges  0x00000000       0x28 hcsr04.o
+ .debug_line    0x00000000      0x193 hcsr04.o
+ .debug_str     0x00000000      0x274 hcsr04.o
  .comment       0x00000000       0x31 hcsr04.o
+ .debug_frame   0x00000000       0x54 hcsr04.o
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
@@ -620,12 +635,12 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xf8a
+.debug_info     0x00000000      0xf51
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4      0x3a7 main.o
- .debug_info    0x0000099b      0x4cd stepMotor.o
- .debug_info    0x00000e68      0x122 uart.o
+ .debug_info    0x000005f4      0x36e main.o
+ .debug_info    0x00000962      0x4cd stepMotor.o
+ .debug_info    0x00000e2f      0x122 uart.o
 
 .debug_abbrev   0x00000000      0x903
  *(.debug_abbrev)
@@ -634,12 +649,12 @@ END GROUP
  .debug_abbrev  0x00000732      0x111 stepMotor.o
  .debug_abbrev  0x00000843       0xc0 uart.o
 
-.debug_line     0x00000000      0x74a
+.debug_line     0x00000000      0x754
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x1e2 main.o
- .debug_line    0x00000316      0x2cb stepMotor.o
- .debug_line    0x000005e1      0x169 uart.o
+ .debug_line    0x00000134      0x1ec main.o
+ .debug_line    0x00000320      0x2cb stepMotor.o
+ .debug_line    0x000005eb      0x169 uart.o
 
 .debug_frame    0x00000000       0xe8
  *(.debug_frame)

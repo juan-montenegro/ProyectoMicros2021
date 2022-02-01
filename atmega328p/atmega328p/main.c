@@ -10,6 +10,8 @@
 #define F_CPU 8000000UL
 
 #include "stepMotor.h"
+#include "uart.h"
+#include "hcsr04.h"
 
 #include <util/delay.h>
 #include <avr/interrupt.h>
