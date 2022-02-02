@@ -52,7 +52,10 @@ int main(void)
 	float ciclo=0;
 	float distancia;
 	float velocidad;
+	
+	// Velocidad del sonido en cm/us
 	velocidad = (SOUND_SPEED+(0.606*TEMPERATURE)+(0.0124*HUMIDITY))/10000;
+	
 	float tiempo = 0;
 	char cadena[30];
 	char BUFF[12];

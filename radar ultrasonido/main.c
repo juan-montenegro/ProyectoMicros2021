@@ -15,7 +15,9 @@
 #include "UART.h"
 
 #define		F_CPU 8000000UL
-#define		SOUND_SPEED	(float) 17450 //(((331.5f*100f) + (0.6f*30.0f)) / 2.0f)
+#define	SOUND_SPEED	(float) 331.4	// Velocidad a 0°C (m/s)
+#define TEMPERATURE (float) 30.0	// Temperatura
+#define HUMIDITY	(float) 80.0	// Humedad
 
 // Global variables for the ICM
 volatile unsigned int tSignal[2];
@@ -58,68 +60,88 @@ int main(void)
 	DDRC = 0x0F;
 	
 	//iniciacion de variables 
+	int mod;
 	float anguloMotor=0;
-	float rangeSensor;
+	float ciclo=0;
+	float distancia;
+	float velocidad;
+	velocidad = (SOUND_SPEED+(0.606*TEMPERATURE)+(0.0124*HUMIDITY))/10000;
+	float tiempo = 0;
 	char cadena[30];
-	char BUFF[6];
-	char BUFF2[6];
+	char BUFF[12];
+	char BUFF2[12];
 	
-	while(1)
+	// Global interrupt enable
+	sei();
+
+	
+	while (1)
 	{
 		//TODO:: Please write your application code
-		for(int i=0;i<16;i++){	
-			
-			//SE LLAMA LA FUNCION ULTRASONIDO 
-			setTrigger();
-			
-			// Measuring distance
-			while(!icr1Flag);
-			icr1Flag = 0;
-			rangeSensor = ((tSignal[1] - tSignal[0]) * SOUND_SPEED * 64) / (F_CPU);
-			
-			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
-			
-			dtostrf(anguloMotor,6,4,BUFF);
-			sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			Uart_write_txt(cadena);
-			
-			dtostrf(rangeSensor,6,4,BUFF2);
-			sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
-			Uart_write_txt(cadena);
-			
-			//Positioning the tower
-			setTowerMotion(anguloMotor);
-				
-		}
-			
-		PORTC = 0x09;		/* Last step to initial position */
-		_delay_ms(1000);
-		
-		for(int i=0;i<16;i++){	
+		for(int i=0;i<512;i++){
 			
 			//SE LLAMA LA FUNCION ULTRASONIDO
-			setTrigger();
+			
 			
 			// Measuring distance
-			while(!icr1Flag);
-			icr1Flag = 0;
-			rangeSensor = ((tSignal[1] - tSignal[0]) * SOUND_SPEED * 64) / (F_CPU);
+			mod = i % 16;
+			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
+			if	 (mod == 0){
+				setTrigger();
+				
+				// Measuring distance
+				while(!icr1Flag);
+				icr1Flag = 0;
+				ciclo = (tSignal[1] - tSignal[0]);
+				tiempo = ciclo*32768*2/65536;
+				distancia = (tiempo*velocidad)/2;
+				dtostrf(anguloMotor,12,4,BUFF);
+				sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
+				Uart_write_txt(cadena);
+				
+				dtostrf(distancia,12,4,BUFF2);
+				sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
+				Uart_write_txt(cadena);
+				
+				//Positioning the tower
+				setTowerMotion(anguloMotor);
+			}
 			
+		}
+		PORTC = 0x09;		/* Last step to initial position */
+		_delay_ms(1000);
+		for(int i=0;i<512;i++){
+			
+			//SE LLAMA LA FUNCION ULTRASONIDO
+			
+			
+			// Measuring distance
+			mod = i % 16;
 			anguloMotor= driveStepperAnticlock(anguloMotor); //se mueve el motor 22.5 angulo
 			
-			dtostrf(anguloMotor,6,4,BUFF);
-			sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			Uart_write_txt(cadena);
-			
-			dtostrf(rangeSensor,6,4,BUFF2);
-			sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
-			Uart_write_txt(cadena);
-			
-			//Positioning the tower
-			setTowerMotion(anguloMotor);
+			if	 (mod == 0){
+				setTrigger();
+				
+				// Measuring distance
+				while(!icr1Flag);
+				icr1Flag = 0;
+				ciclo = (tSignal[1] - tSignal[0]);
+				tiempo = ciclo*32768*2/65536;
+				distancia = (tiempo*velocidad)/2;
+				
+				dtostrf(anguloMotor,12,4,BUFF);
+				sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
+				Uart_write_txt(cadena);
+				
+				dtostrf(distancia,12,4,BUFF2);
+				sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
+				Uart_write_txt(cadena);
+				
+				//Positioning the tower
+				setTowerMotion(anguloMotor);
+			}
 		}
-		
-		PORTC = 0x09;
+		PORTC = 0x09;		/* Last step to initial position */
 		_delay_ms(1000);
 	}
 }
