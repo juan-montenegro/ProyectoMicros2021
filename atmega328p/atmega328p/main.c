@@ -95,11 +95,11 @@ int main(void)
 				tiempo = ciclo*32768*2/65536;
 				distancia = (tiempo*velocidad)/2;
 				dtostrf(anguloMotor,12,4,BUFF);
-				sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
+				sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
 				Uart_write_txt(cadena);
 				
 				dtostrf(distancia,12,4,BUFF2);
-				sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
+				sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
 				Uart_write_txt(cadena);
 				
 				//Positioning the tower
@@ -129,11 +129,11 @@ int main(void)
 				 distancia = (tiempo*velocidad)/2;
 				 				 
 				 dtostrf(anguloMotor,12,4,BUFF);
-				 sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
+				 sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
 				 Uart_write_txt(cadena);
 				 
 				 dtostrf(distancia,12,4,BUFF2);
-				 sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
+				 sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
 				 Uart_write_txt(cadena);
 				 
 				 //Positioning the tower
