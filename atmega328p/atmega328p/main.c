@@ -8,6 +8,9 @@
 #include <avr/io.h>
 
 #define F_CPU 8000000UL
+#define	SOUND_SPEED	(float) 331.4	// Velocidad a 0°C
+#define TEMPERATURE (float) 30.0	// Temperatura
+#define HUMIDITY	(float) 80.0	// Humedad
 
 #include "stepMotor.h"
 #include "uart.h"
@@ -16,20 +19,59 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
+// Global variables for the ICM
+volatile unsigned int tSignal[2];
+volatile unsigned int ti = 0;
+volatile unsigned char icr1Flag = 0;
+
+/////////////////////////////////////////////////////////
+// ISR for ICM
+ISR(TIMER1_CAPT_vect)
+{
+	tSignal[ti] = ICR1;
+	
+	if (ti==0)
+	TCCR1B &= ~(1 << ICES1);
+	
+	ti++;
+	if (ti > 1)
+	{
+		ti = 0;
+		icr1Flag = 1;
+		TCNT1 = 0;
+		TCCR1B |= (1 << ICES1);
+	}
+}
+
 
 int main(void)
 {
     /* Replace with your application code */
+	int mod;
 	float anguloMotor=0;
+	float ciclo=0;
+	float distancia;
+	float velocidad;
+	velocidad = (SOUND_SPEED+(0.606*TEMPERATURE)+(0.0124*HUMIDITY))/10000;
+	float tiempo = 0;
 	char cadena[30];
-	char BUFF[6];
+	char BUFF[12];
+	char BUFF2[12];
 	
 	// Port init
-	DDRD |= (1 << 7);
+	DDRD &= ~(1 << PIND6);
+	DDRD |= (1 << TRIG);
+
 	DDRC |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
+	PORTB = (1 << ECHO);
 	
+
+	uart_init(BAUD_VAL);
+	configPWMTower();
+	configDistanceTower();
+	
+	// Global interrupt enable
 	sei();
-	uart_init();
 
 	
     while (1) 
@@ -41,11 +83,28 @@ int main(void)
 			 
 			 
 			 // Measuring distance
-			 			 
-			 anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
-			 dtostrf(anguloMotor,6,4,BUFF);
-			 sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			 Uart_write_txt(cadena);
+			mod = i % 16;
+			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
+			if	 (mod == 0){
+				setTrigger();
+				
+				// Measuring distance
+				while(!icr1Flag);
+				icr1Flag = 0;
+				ciclo = (tSignal[1] - tSignal[0]);
+				tiempo = ciclo*32768*2/65536;
+				distancia = (tiempo*velocidad)/2;
+				dtostrf(anguloMotor,12,4,BUFF);
+				sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
+				Uart_write_txt(cadena);
+				
+				dtostrf(distancia,12,4,BUFF2);
+				sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
+				Uart_write_txt(cadena);
+				
+				//Positioning the tower
+				setTowerMotion(anguloMotor);
+			 }
 			 
 		 }
 		 PORTC = 0x09;		/* Last step to initial position */
@@ -56,12 +115,30 @@ int main(void)
 			 
 			 
 			 // Measuring distance
-			 
+			 mod = i % 16;
 			 anguloMotor= driveStepperAnticlock(anguloMotor); //se mueve el motor 22.5 angulo
 			 
-			 dtostrf(anguloMotor,6,4,BUFF);
-			 sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
-			 Uart_write_txt(cadena);
+			 if	 (mod == 0){
+				 setTrigger();
+				 
+				 // Measuring distance
+				 while(!icr1Flag);
+				 icr1Flag = 0;
+				 ciclo = (tSignal[1] - tSignal[0]);
+				 tiempo = ciclo*32768*2/65536;
+				 distancia = (tiempo*velocidad)/2;
+				 				 
+				 dtostrf(anguloMotor,12,4,BUFF);
+				 sprintf(cadena,"\n\rAngulo: %s\r\n",BUFF);
+				 Uart_write_txt(cadena);
+				 
+				 dtostrf(distancia,12,4,BUFF2);
+				 sprintf(cadena,"\n\rDistancia: %s \r\n",BUFF2);
+				 Uart_write_txt(cadena);
+				 
+				 //Positioning the tower
+				 setTowerMotion(anguloMotor);
+			 }
 		 }
 		 PORTC = 0x09;		/* Last step to initial position */
 		 _delay_ms(1000);

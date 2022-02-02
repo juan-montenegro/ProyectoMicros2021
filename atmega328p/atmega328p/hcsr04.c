@@ -27,19 +27,20 @@ void configDistanceTower()
 	// ICM conf.
 	TCCR1A = 0;
 	TIFR0 = (1<<ICF1);
-	TCCR1B |= (1 << ICES1) | (1 << CS11);
-	TIMSK0 |= (1 << OCIE0A);
+	TCCR1B |= (1 << ICES1) | (1 << CS10);
+	TIMSK1 |= (1 << ICIE1);
 	TCNT1 = 0;
+
 }
 
 /////////////////////////////////////////////////////////
 void setTrigger()
 {
-	PORTD &= ~(1 << 4);
+	PORTD &= ~(1 << TRIG);
 	_delay_ms(TRIGGER);
-	PORTD |= (1 << 4);
+	PORTD |= (1 << TRIG);
 	_delay_us(TRIGGER);
-	PORTD &= ~(1 << 4);
+	PORTD &= ~(1 << TRIG);
 }
 
 /////////////////////////////////////////////////////////

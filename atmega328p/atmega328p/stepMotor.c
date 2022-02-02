@@ -9,15 +9,15 @@
 
 #define F_CPU 8000000UL
 #define DELAY_BASE	170
-#define PERIOD (int)10
-#define angle (float)0.706
+#define PERIOD 10
+#define angle 0.08789
 #include <util/delay.h>
 
 
 ////////////////////////////////////////////////////
 int isButtonPressed(unsigned char bitPos)
 {
-	if (PIND7 & bitPos)
+	if (PIND6 & bitPos)
 	return 1;
 	else
 	return 0;
@@ -35,15 +35,15 @@ float driveStepperOclock(float anguloMotor)
 	_delay_ms(PERIOD);
 
 	PORTC = 0x0C;
-		anguloMotor +=angle;
+	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x04;
-		anguloMotor +=angle;
+	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x06;
-		anguloMotor +=angle;
+	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x02;

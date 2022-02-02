@@ -9,11 +9,11 @@
 #ifndef UART_H_
 #define UART_H_
 
-#define FOSC		  8000000UL
-#define BAUD_RATE     9600UL
-#define BAUD_VAL      (FOSC/(BAUD_RATE*16UL)-1)
+#define FOSC		8000000
+#define BAUD		9600
+#define BAUD_VAL	FOSC/8/BAUD-1
 
-void uart_init(); // iniciar UART
+void uart_init(unsigned int MYUBRR); // iniciar UART
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 
