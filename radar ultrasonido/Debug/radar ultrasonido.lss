@@ -1170,8 +1170,8 @@ float driveStepperAnticlock(float anguloMotor){
      728:	44 1f       	adc	r20, r20
      72a:	55 1f       	adc	r21, r21
      72c:	60 e0       	ldi	r22, 0x00	; 0
-     72e:	72 e1       	ldi	r23, 0x12	; 18
-     730:	8a e7       	ldi	r24, 0x7A	; 122
+     72e:	79 e0       	ldi	r23, 0x09	; 9
+     730:	8d e3       	ldi	r24, 0x3D	; 61
      732:	90 e0       	ldi	r25, 0x00	; 0
      734:	0e 94 25 05 	call	0xa4a	; 0xa4a <__udivmodsi4>
      738:	8f ef       	ldi	r24, 0xFF	; 255

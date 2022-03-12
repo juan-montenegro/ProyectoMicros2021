@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include "UART.h"
 
-#define F_CPU 8000000UL
+#define F_CPU 4000000UL
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 void uart_init(long USART_BAUDRATE){

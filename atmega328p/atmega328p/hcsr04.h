@@ -9,7 +9,6 @@
 #ifndef HCSR04_H_
 #define HCSR04_H_
 
-#define		F_CPU	8000000L
 #define		ECHO PORTB0
 #define		TRIG PORTD7
 #include	<util/delay.h>

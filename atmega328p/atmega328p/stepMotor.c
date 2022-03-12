@@ -7,7 +7,6 @@
 
 #include <avr/io.h>
 
-#define F_CPU 8000000UL
 #define DELAY_BASE	170
 #define PERIOD 10
 #define angle 0.08789

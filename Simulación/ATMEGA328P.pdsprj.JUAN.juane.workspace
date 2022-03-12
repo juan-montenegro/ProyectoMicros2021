@@ -95,7 +95,7 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="450" x="890" flags="00000023" y="61" h="248" pid="0" iid="12">
+   <POPUP w="450" x="216" flags="00008023" y="240" h="248" pid="0" iid="12">
     <PROPERTIES>
      <ITEM name="AutoEcho">0</ITEM>
      <ITEM name="HexMode">0</ITEM>

@@ -7,17 +7,26 @@
 #include <stdio.h>
 #include <avr/io.h>
 
-#define F_CPU 8000000UL
-#define	SOUND_SPEED	(float) 331.4	// Velocidad a 0°C
-#define TEMPERATURE (float) 30.0	// Temperatura
-#define HUMIDITY	(float) 80.0	// Humedad
-
+/* Libraries */
 #include "stepMotor.h"
 #include "uart.h"
 #include "hcsr04.h"
 
 #include <util/delay.h>
 #include <avr/interrupt.h>
+
+
+/* Define F_CPU in hz here */
+#define F_CPU 8000000UL
+
+/* Define UART baud rate here */
+#define BAUD 9600
+#define MYUBRR F_CPU/16/BAUD-1
+
+/* Constants */
+#define	SOUND_SPEED	(float) 331.4	// Velocidad a 0°C
+#define TEMPERATURE (float) 30.0	// Temperatura
+#define HUMIDITY	(float) 80.0	// Humedad
 
 // Global variables for the ICM
 volatile unsigned int tSignal[2];
@@ -66,10 +75,10 @@ int main(void)
 	DDRD |= (1 << TRIG);
 
 	DDRC |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
-	PORTB = (1 << ECHO);
+	PORTB |= (1 << ECHO);
 	
 
-	uart_init(BAUD_VAL);
+	uart_init(MYUBRR);
 	configPWMTower();
 	configDistanceTower();
 	
@@ -81,19 +90,17 @@ int main(void)
     {
 		 //TODO:: Please write your application code
 		 for(int i=0;i<512;i++){
-			 
-			 //SE LLAMA LA FUNCION ULTRASONIDO
-			 
-			 
-			 // Measuring distance
 			mod = i % 16;
 			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
 			if	 (mod == 0){
+				//SE LLAMA LA FUNCION ULTRASONIDO
 				setTrigger();
 				
 				// Measuring distance
 				while(!icr1Flag);
 				icr1Flag = 0;
+				
+				// Measuring distance
 				ciclo = (tSignal[1] - tSignal[0]);
 				tiempo = ciclo*32768*2/65536;
 				distancia = (tiempo*velocidad)/2;

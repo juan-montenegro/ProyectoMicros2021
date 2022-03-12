@@ -7,22 +7,26 @@
 #include <avr/io.h>
 #include "UART.h"
 
-void uart_init(unsigned int MYUBRR){
+void uart_init(unsigned int ubrr){
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
 	// USART Transmitter: On
 	// USART Mode: Asynchronous
 	// USART Baud Rate: 9600
 	
-	// 0b0010, bit 0 de entrada (RXD), bit 1 de salida (TXD)
-	UCSR0A |= (1<<UDRE0) | (1<<U2X0);
+	/*Set baud rate */
 
-	UCSR0B |= (1<<RXEN0) | (1<<TXEN0); // funciona como receptor y transmisor
-	UCSR0C |= (1<<UCSZ01) | (1<<UCSZ00);// tamaño 8 bits
-	//UCSR0C |= (1 << USBS0); // 2 Stop Bits
-	UBRR0L = (unsigned char)(MYUBRR);			//PARTE ALTA DE LA VELOCIDAD DE COMUNICACIÓN
-	UBRR0H = (unsigned char)(MYUBRR >> 8);	//PARTE BAJA DE LA VELOCIDAD DE COMUNICACIÓN
+	UBRR0H = (unsigned char)(ubrr>>8);
+	UBRR0L = (unsigned char)(ubrr);
+
+	//UBRR0H = 0x00;
+	//UBRR0L = 0x19;
+	/*Enable receiver and transmitter */
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 	
+	/* Set frame format: 8data */
+	UCSR0C |= (1<<UCSZ01) | (1<<UCSZ00);
+	UCSR0A |= (1<<UDRE0);
 }
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
@@ -35,8 +39,7 @@ int Uart_write(unsigned char caracter)
 
 void Uart_write_txt(char* cadena){
 	while(*cadena !=0x00){
-		Uart_write(*cadena);
-		cadena++;
+		Uart_write(*cadena++);
 	}
 }
 
