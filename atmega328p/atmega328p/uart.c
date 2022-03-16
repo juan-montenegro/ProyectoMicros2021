@@ -33,7 +33,7 @@ void uART_init(unsigned int ubrr){
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 
-int UART_putc(unsigned char caracter)
+void UART_putc(unsigned char caracter)
 {
 	while (!(UCSR0A & (1 << UDRE0))); // si el bit 5 del registro UCSRA es 1, entonces esta disponible para enviar datos TRANSMISION
 	UDR0=caracter; //me recibe un char para guardarlo en el registro UDR y enviarlo TRANSMISION

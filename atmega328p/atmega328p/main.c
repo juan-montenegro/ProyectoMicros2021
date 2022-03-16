@@ -60,7 +60,7 @@ int main(void)
 	float ciclo=0;
 	float distancia;
 	float velocidad;
-	
+	int cont = 0;
 	// Velocidad del sonido en cm/us
 	velocidad = (SOUND_SPEED+(0.606*TEMPERATURE)+(0.0124*HUMIDITY))/10000;
 	
@@ -91,8 +91,10 @@ int main(void)
 			if	 (mod == 0){
 				//SE LLAMA LA FUNCION ULTRASONIDO
 				sei();
+				
 				setTrigger();
 				
+				cont = cont + 1;
 				// Measuring distance
 				while(!icr1Flag);
 				icr1Flag = 0;
@@ -104,11 +106,11 @@ int main(void)
 				
 				// Send Data
 				dtostrf(anguloMotor,12,4,BUFF);
-				sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
+				sprintf(cadena,"\n\r%d \t Angulo    \t %s\r\n",cont,BUFF);
 				UART_puts(cadena);
 				
 				dtostrf(distancia,12,4,BUFF2);
-				sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
+				sprintf(cadena,"\n\r%d \t Distancia \t %s cm\r\n",cont,BUFF2);
 				UART_puts(cadena);
 				
 			 }
@@ -124,7 +126,7 @@ int main(void)
 			 if	 (mod == 0){
 				 sei();
 				 setTrigger();
-				 
+				 cont = cont + 1;
 				 // Measuring distance
 				 while(!icr1Flag);
 				 icr1Flag = 0;
@@ -133,11 +135,11 @@ int main(void)
 				 distancia = ((tiempo*velocidad)/2);
 				 				 
 				 dtostrf(anguloMotor,12,4,BUFF);
-				 sprintf(cadena,"\n\rAngulo: %s \r\n",BUFF);
+				 sprintf(cadena,"\n\r%d \t Angulo    \t %s\r\n",cont,BUFF);
 				 UART_puts(cadena);
 				 
 				 dtostrf(distancia,12,4,BUFF2);
-				 sprintf(cadena,"\n\rDistancia: %s cm\r\n",BUFF2);
+				 sprintf(cadena,"\n\r%d \t Distancia \t %s cm\r\n",cont,BUFF2);
 				 UART_puts(cadena);
 			 }
 		 }
