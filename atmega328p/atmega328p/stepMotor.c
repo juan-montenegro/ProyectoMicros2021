@@ -7,10 +7,12 @@
 
 #include <avr/io.h>
 
-#define DELAY_BASE	170
-#define PERIOD 10
-#define angle 0.08789
+/* Define F_CPU in hz here */
+#define F_CPU 16000000UL
+
+#include "stepMotor.h"
 #include <util/delay.h>
+#include <math.h>
 
 
 ////////////////////////////////////////////////////
@@ -26,39 +28,32 @@ int isButtonPressed(unsigned char bitPos)
 float driveStepperOclock(float anguloMotor)
 {
 	PORTC = 0x09;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x08;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x0C;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x04;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x06;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x02;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x03;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x01;
-	anguloMotor +=angle;
 	_delay_ms(PERIOD);
 	
 	/* Rotate Stepper Motor Anticlockwise with half step sequence */
-	
+	anguloMotor +=angle;
+
 	return anguloMotor;
 	
 }
@@ -66,36 +61,29 @@ float driveStepperOclock(float anguloMotor)
 float driveStepperAnticlock(float anguloMotor){
 
 	PORTC = 0x09;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x01;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x03;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x02;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x06;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x04;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 	
 	PORTC = 0x0C;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 
 	PORTC = 0x08;
-	anguloMotor -=angle;
 	_delay_ms(PERIOD);
 
+	anguloMotor -=angle;
 	return anguloMotor;
 }

@@ -5,9 +5,13 @@
  *  Author: juane
  */ 
 #include <avr/io.h>
+
+/* Define F_CPU in hz here */
+#define F_CPU 16000000UL
+
 #include "UART.h"
 
-void uart_init(unsigned int ubrr){
+void uART_init(unsigned int ubrr){
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
 	// USART Transmitter: On
@@ -15,12 +19,10 @@ void uart_init(unsigned int ubrr){
 	// USART Baud Rate: 9600
 	
 	/*Set baud rate */
-
 	UBRR0H = (unsigned char)(ubrr>>8);
 	UBRR0L = (unsigned char)(ubrr);
 
-	//UBRR0H = 0x00;
-	//UBRR0L = 0x19;
+
 	/*Enable receiver and transmitter */
 	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 	
@@ -31,15 +33,15 @@ void uart_init(unsigned int ubrr){
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 
-int Uart_write(unsigned char caracter)
+int UART_putc(unsigned char caracter)
 {
 	while (!(UCSR0A & (1 << UDRE0))); // si el bit 5 del registro UCSRA es 1, entonces esta disponible para enviar datos TRANSMISION
 	UDR0=caracter; //me recibe un char para guardarlo en el registro UDR y enviarlo TRANSMISION
 }
 
-void Uart_write_txt(char* cadena){
+void UART_puts(char* cadena){
 	while(*cadena !=0x00){
-		Uart_write(*cadena++);
+		UART_putc(*cadena++);
 	}
 }
 
@@ -52,7 +54,7 @@ int isUSARTerror() // funcion que me da 1 si hay un error al recibir los datos, 
 	return 0;
 }
 
-unsigned char UART_read(){ //RECEPTOR
+unsigned char UART_get(){ //RECEPTOR
 	
 	if(UCSR0A &(1<<RXC0)){			//si el bit7 del registro UCSRA se ha puesto a 1 (bit RXC esta en 1 cuando hay un dato en el receptor)
 		return UDR0;			//devuelve el dato almacenado en el registro UDR

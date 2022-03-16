@@ -9,14 +9,12 @@
 #ifndef HCSR04_H_
 #define HCSR04_H_
 
-#define		ECHO PORTB0
-#define		TRIG PORTD7
-#include	<util/delay.h>
-#define		TRIGGER		10
+#define		ECHO	PINB0
+#define		TRIG	PIND7
+#define		TRIGGER	10
 
-void configPWMTower();
-void configDistanceTower();
+void initSensor();
 void setTrigger();
-void setTowerMotion(unsigned char towerPos);
+//void setTowerMotion(unsigned char towerPos);
 
 #endif /* HCSR04_H_ */

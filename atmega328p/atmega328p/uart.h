@@ -9,14 +9,13 @@
 #ifndef UART_H_
 #define UART_H_
 
-void uart_init(unsigned int ubrr); // iniciar UART
+void uART_init(unsigned int ubrr); // iniciar UART
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 
-int isUSARTerror(); // funcion que me da 1 si hay un error al recibir los datos, mientras sea 0 se puede guardar los datos RECEPTOR
-unsigned char UART_read(); //RECEPTOR
-
-void Uart_write_txt(char* cadena);//transmitir
-int Uart_write(unsigned char caracter);//transmitir
+int iUART_error(); // funcion que me da 1 si hay un error al recibir los datos, mientras sea 0 se puede guardar los datos RECEPTOR
+unsigned char UART_get(); //RECEPTOR
+void UART_puts(char* cadena);//transmitir
+int UART_putc(unsigned char caracter);//transmitir
 
 #endif /* UART_H_ */
