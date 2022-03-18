@@ -33,15 +33,15 @@ void uART_init(unsigned int ubrr){
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 
-void UART_putc(unsigned char caracter)
+void UART_Char(unsigned char caracter)
 {
 	while (!(UCSR0A & (1 << UDRE0))); // si el bit 5 del registro UCSRA es 1, entonces esta disponible para enviar datos TRANSMISION
 	UDR0=caracter; //me recibe un char para guardarlo en el registro UDR y enviarlo TRANSMISION
 }
 
-void UART_puts(char* cadena){
+void UART_String(char* cadena){
 	while(*cadena !=0x00){
-		UART_putc(*cadena++);
+		UART_Char(*cadena++);
 	}
 }
 
@@ -49,9 +49,9 @@ void UART_puts(char* cadena){
 int isUSARTerror() // funcion que me da 1 si hay un error al recibir los datos, mientras sea 0 se puede guardar los datos RECEPTOR
 {
 	if (((UCSR0A & (1 << FE0)) | (UCSR0A & (1 << DOR0)) | (UCSR0A & (1 << UPE0)))) //bit de error al recibir o desbordamiento o error de paridad
-	return 1;
+		return 1;
 	else
-	return 0;
+		return 0;
 }
 
 unsigned char UART_get(){ //RECEPTOR

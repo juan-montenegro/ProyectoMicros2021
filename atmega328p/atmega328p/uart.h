@@ -15,7 +15,7 @@ void uART_init(unsigned int ubrr); // iniciar UART
 
 int iUART_error(); // funcion que me da 1 si hay un error al recibir los datos, mientras sea 0 se puede guardar los datos RECEPTOR
 unsigned char UART_get(); //RECEPTOR
-void UART_puts(char* cadena);//transmitir
-void UART_putc(unsigned char caracter);//transmitir
+void UART_String(char* cadena);//transmitir
+void UART_Char(unsigned char caracter);//transmitir
 
 #endif /* UART_H_ */

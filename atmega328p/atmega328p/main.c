@@ -5,6 +5,7 @@
  * Author : juane
  */ 
 #include <stdio.h>
+#include <stdlib.h>
 #include <avr/io.h>
 
 /* Define F_CPU in hz here */
@@ -80,7 +81,7 @@ int main(void)
 	// Global interrupt enable
 	sei();
 
-	
+	UART_String("\n\rNo|Angulo|Distancia\r\n");
     while (1) 
     {
 		 //TODO:: Please write your application code
@@ -101,17 +102,14 @@ int main(void)
 				
 				// Measuring distance
 				ciclo = (tSignal[1] - tSignal[0]);
-				tiempo = ciclo*32768*2/65536;
-				distancia = ((tiempo*velocidad)/2*4);
+				tiempo = ciclo*(32768*8)/65536;
+				distancia = (tiempo*velocidad)/2;
 				
 				// Send Data
-				dtostrf(anguloMotor,12,4,BUFF);
-				sprintf(cadena,"\n\r%d \t Angulo    \t %s\r\n",cont,BUFF);
-				UART_puts(cadena);
-				
-				dtostrf(distancia,12,4,BUFF2);
-				sprintf(cadena,"\n\r%d \t Distancia \t %s cm\r\n",cont,BUFF2);
-				UART_puts(cadena);
+				dtostrf(anguloMotor,8,4,BUFF);
+				dtostrf(distancia,8,4,BUFF2);
+				sprintf(cadena,"\n\r%d|%s|%s\r\n",cont ,BUFF ,BUFF2);
+				UART_String(cadena);
 				
 			 }
 			 
@@ -121,26 +119,29 @@ int main(void)
 		 for(int i=0;i<STEP;i++){
 			 mod = i % 16;
 			 cli();
-			 anguloMotor= driveStepperAnticlock(anguloMotor); //se mueve el motor 22.5 angulo
+			 anguloMotor= driveStepperAnticlock(anguloMotor); //se mueve el motor 11.25 angulo
 			 
 			 if	 (mod == 0){
 				 sei();
 				 setTrigger();
-				 cont = cont + 1;
+				 
+				 cont = cont - 1;
+				 
 				 // Measuring distance
 				 while(!icr1Flag);
 				 icr1Flag = 0;
-				 ciclo = (tSignal[1] - tSignal[0]);
-				 tiempo = ciclo*32768*2/65536;
-				 distancia = ((tiempo*velocidad)/2);
-				 				 
-				 dtostrf(anguloMotor,12,4,BUFF);
-				 sprintf(cadena,"\n\r%d \t Angulo    \t %s\r\n",cont,BUFF);
-				 UART_puts(cadena);
 				 
-				 dtostrf(distancia,12,4,BUFF2);
-				 sprintf(cadena,"\n\r%d \t Distancia \t %s cm\r\n",cont,BUFF2);
-				 UART_puts(cadena);
+				 // Measuring distance
+				 ciclo = (tSignal[1] - tSignal[0]);
+				 tiempo = ciclo*(32768*8)/65536;
+				 distancia = (tiempo*velocidad)/2;
+				 
+				 // Send Data
+				 dtostrf(anguloMotor,8,4,BUFF);
+				 dtostrf(distancia,8,4,BUFF2);
+				 sprintf(cadena,"\n\r%d|%s|%s\r\n",cont ,BUFF ,BUFF2);
+				 UART_String(cadena);
+				 
 			 }
 		 }
 		 PORTC = 0x09;		/* Last step to initial position */
