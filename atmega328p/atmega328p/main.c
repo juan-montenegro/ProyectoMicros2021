@@ -56,12 +56,15 @@ ISR(TIMER1_CAPT_vect)
 int main(void)
 {
     /* Replace with your application code */
-	int mod;
-	float anguloMotor=0;
+	int mod=0;
+	float aMotor=0;
 	float ciclo=0;
 	float distancia;
 	float velocidad;
 	int cont = 0;
+	unsigned char CH = 0x00;
+	unsigned char START = 0x61;
+	unsigned char STOP = 0x73;
 	// Velocidad del sonido en cm/us
 	velocidad = (SOUND_SPEED+(0.606*TEMPERATURE)+(0.0124*HUMIDITY))/10000;
 	
@@ -75,27 +78,36 @@ int main(void)
 	
 	DDRC |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
 	
-	uART_init(MYUBRR);
+	UART_init(MYUBRR);
 	initSensor();
-	
 	// Global interrupt enable
+	do
+		{
+			CH = UART_get();
+		} while (CH != START);
 	sei();
-
-	UART_String("\n\rNo|Angulo|Distancia\r\n");
+	
+	//UART_String("\n\rNo|Angulo|Distancia\r\n");
     while (1) 
     {
 		 //TODO:: Please write your application code
 		 for(int i=0;i<STEP;i++){
-			mod = i % 16;
+			//mod = (i+1) % 16;
 			cli();
-			anguloMotor= driveStepperOclock(anguloMotor); //se mueve el motor 22.5 angulo
+			CH = UART_get();
+			if (CH == STOP)
+			{
+				do
+				{
+					CH = UART_get();
+				} while (CH != START);
+			}
 			if	 (mod == 0){
 				//SE LLAMA LA FUNCION ULTRASONIDO
 				sei();
 				
 				setTrigger();
 				
-				cont = cont + 1;
 				// Measuring distance
 				while(!icr1Flag);
 				icr1Flag = 0;
@@ -106,26 +118,32 @@ int main(void)
 				distancia = (tiempo*velocidad)/2;
 				
 				// Send Data
-				dtostrf(anguloMotor,8,4,BUFF);
+				dtostrf(aMotor,8,4,BUFF);
 				dtostrf(distancia,8,4,BUFF2);
-				sprintf(cadena,"\n\r%d|%s|%s\r\n",cont ,BUFF ,BUFF2);
+				sprintf(cadena,"\n\r%d|%s|%s|%d\r\n",cont ,BUFF ,BUFF2,i);
 				UART_String(cadena);
 				
+				cont = cont + 1;
 			 }
-			 
+			 mod++;
+			 if(mod==16){
+				 mod=0;
+			 }
+			aMotor= dsOclock(aMotor); //se mueve el motor 7.031 angulo
+			
 		 }
 		 PORTC = 0x09;		/* Last step to initial position */
 		 _delay_ms(1000);
+		 aMotor=0;
 		 for(int i=0;i<STEP;i++){
-			 mod = i % 16;
+			 //mod = (i+1) % 16;
 			 cli();
-			 anguloMotor= driveStepperAnticlock(anguloMotor); //se mueve el motor 11.25 angulo
+			
 			 
 			 if	 (mod == 0){
 				 sei();
 				 setTrigger();
 				 
-				 cont = cont - 1;
 				 
 				 // Measuring distance
 				 while(!icr1Flag);
@@ -137,15 +155,27 @@ int main(void)
 				 distancia = (tiempo*velocidad)/2;
 				 
 				 // Send Data
-				 dtostrf(anguloMotor,8,4,BUFF);
+				 dtostrf(aMotor,8,4,BUFF);
 				 dtostrf(distancia,8,4,BUFF2);
-				 sprintf(cadena,"\n\r%d|%s|%s\r\n",cont ,BUFF ,BUFF2);
+				 if(cont==32){
+					  sprintf(cadena,"\n\r%d|%s|%s|%d\r\n",0 ,BUFF ,BUFF2,i);
+				 }else{
+					 sprintf(cadena,"\n\r%d|-%s|%s|%d\r\n",cont ,BUFF ,BUFF2,i);
+				 }
+				 
 				 UART_String(cadena);
+				 cont = cont - 1;
 				 
 			 }
+			mod++;
+			if(mod==16){
+				mod=0;
+			}
+			aMotor= dsAnticlock(aMotor); //se mueve el motor 0.7031 angulo
 		 }
 		 PORTC = 0x09;		/* Last step to initial position */
 		 _delay_ms(1000);
+		 aMotor=0;
     }
 }
 

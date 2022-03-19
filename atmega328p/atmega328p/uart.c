@@ -11,7 +11,7 @@
 
 #include "UART.h"
 
-void uART_init(unsigned int ubrr){
+void UART_init(unsigned int ubrr){
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
 	// USART Transmitter: On

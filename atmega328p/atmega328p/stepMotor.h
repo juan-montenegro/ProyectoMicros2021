@@ -15,8 +15,8 @@
 #define STEP 512
 #define angle (float)360/STEP
 
-int isButtonPressed(unsigned char bitPos);
-float driveStepperOclock(float anguloMotor);
-float driveStepperAnticlock(float anguloMotor);
+//int isButtonPressed(unsigned char bitPos);
+float dsOclock(float aMotor);
+float dsAnticlock(float aMotor);
 
 #endif /* STEPMOTOR_H_ */

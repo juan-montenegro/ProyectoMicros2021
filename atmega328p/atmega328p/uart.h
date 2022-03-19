@@ -9,7 +9,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-void uART_init(unsigned int ubrr); // iniciar UART
+void UART_init(unsigned int ubrr); // iniciar UART
 
 //----------FUNCIONES PARA TRANSMITIR Y RECEPTAR------------------------------------------------
 

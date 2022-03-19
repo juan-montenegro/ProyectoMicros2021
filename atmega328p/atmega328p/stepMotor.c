@@ -15,17 +15,17 @@
 #include <math.h>
 
 
-////////////////////////////////////////////////////
+/*////////////////////////////////////////////////////
 int isButtonPressed(unsigned char bitPos)
 {
 	if (PIND6 & bitPos)
 	return 1;
 	else
 	return 0;
-}
+}*/
 
 ////////////////////////////////////////////////////
-float driveStepperOclock(float anguloMotor)
+float dsOclock(float aMotor)
 {
 	PORTC = 0x09;
 	_delay_ms(PERIOD);
@@ -52,13 +52,13 @@ float driveStepperOclock(float anguloMotor)
 	_delay_ms(PERIOD);
 	
 	/* Rotate Stepper Motor Anticlockwise with half step sequence */
-	anguloMotor +=angle;
+	aMotor +=angle;
 
-	return anguloMotor;
+	return aMotor;
 	
 }
 
-float driveStepperAnticlock(float anguloMotor){
+float dsAnticlock(float aMotor){
 
 	PORTC = 0x09;
 	_delay_ms(PERIOD);
@@ -84,6 +84,6 @@ float driveStepperAnticlock(float anguloMotor){
 	PORTC = 0x08;
 	_delay_ms(PERIOD);
 
-	anguloMotor -=angle;
-	return anguloMotor;
+	aMotor +=angle;
+	return aMotor;
 }
