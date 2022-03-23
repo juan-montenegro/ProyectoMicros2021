@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/"
+  data-template="vertical-menu-template-free">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+  <title>Radar</title>
+  <meta name="description" content="" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/favicon/favicon.ico')}}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/css/core.css')}}"
+    class="template-customizer-core-css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/css/theme-default.css')}}"
+    class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/demo.css')}}" />
+
+
+  <script src="{{ url_for('static', filename='assets/vendor/js/helpers.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/js/config.js')}}"></script>
+  <script src="{{ url_for('static', filename='chart/chart.js')}}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" charset="utf-8"></script>
+  <!--   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script> -->
+
+</head>
+
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar layout-without-menu">
+    <div class="layout-container">
+
+      <!-- Layout container -->
+      <div class="layout-page">
+
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+          <!-- Content -->
+
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4">
+              <span class="text-muted fw-light">Radar 2D /</span>
+              ATMega328P
+            </h4>
+
+            <div class="row">
+
+              <div class="card-group">
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="myChart" height="800" width="800"></canvas>
+
+                  </div>
+                  <div class="card-footer">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <input type="range" class="form-range mt-3" value="500" min="1" max="500" id="range_radar"
+                          oninput="range_radar_span.innerHTML=range_radar.value" />
+                      </div>
+                    </div>
+                    <button type="button" class="btn rounded-pill btn-danger" id="range_radar_button">
+                      Set_range
+                      <span class="badge bg-white text-primary rounded-pill" id="range_radar_span">500</span>
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success"
+                      id="download_graph_radar">Download</button>
+                    <button type="button" class="btn rounded-pill btn-secondary" id="stop_button">Stop</button>
+                    <button type="button" class="btn rounded-pill btn-primary" id="start_button">Start</button>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="myChart2" height="800" width="800"></canvas>
+
+                  </div>
+                  <div class="card-footer">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <input type="range" class="form-range mt-3" value="500" min="1" max="500" id="range_cartesian"
+                          oninput="range_cartesian_span.innerHTML=range_cartesian.value" />
+                      </div>
+                    </div>
+                    <button type="button" class="btn rounded-pill btn-danger" id="range_cartesian_button">
+                      Set_range
+                      <span class="badge bg-white text-primary rounded-pill" id="range_cartesian_span">500</span>
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success"
+                      id="download_graph_cartesian">Download</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / Content -->
+
+
+          <!-- <div class="content-backdrop fade"></div> -->
+        </div>
+        <!-- Content wrapper -->
+      </div>
+      <!-- / Layout page -->
+    </div>
+
+    <!-- Overlay -->
+    <!-- <div class="layout-overlay layout-menu-toggle"></div> -->
+  </div>
+  <!-- / Layout wrapper -->
+  <!-- Core JS -->
+  <!-- build:js assets/vendor/js/core.js -->
+  <script src="{{ url_for('static', filename='assets/vendor/libs/jquery/jquery.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/libs/popper/popper.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/js/bootstrap.js')}}"></script>
+
+  <script src="{{ url_for('static', filename='assets/vendor/js/menu.js')}}"></script>
+  <!-- endbuild -->
+
+  <!-- Vendors JS -->
+
+  <!-- Main JS -->
+  <script src="{{ url_for('static', filename='assets/js/main.js')}}"></script>
+
+  <!-- Page JS -->
+  <script>
+    $(document).ready(function () {
+      max_range_radar = 500;
+      console.log(max_range_radar);
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+      $('#refresh_graph').click(function (event) {
+        const new_data = Array.from({ length: 32 }, () => Math.floor(Math.random() * 40));
+        myChart.data.datasets[0].data = new_data;
+        myChart.update();
+      });
+      $('#refresh_graph_2').click(function (event) {
+        const new_data = Math.floor(Math.random() * 80);
+        myChart.data.datasets[0].data[2] = new_data;
+        myChart.update();
+      });
+      $('#range_radar_button').click(function (event) {
+        const array_empty = new Array(32).fill('');
+        max_range_radar = parseInt($("#range_radar").val());
+        myChart.data.datasets[0].data = array_empty;
+        myChart.update();
+        console.log(max_range_radar);
+      });
+      $('#stop_button').click(function (event) {
+        socket.emit('send', 's\n');
+      });
+
+      $('#start_button').click(function (event) {
+        socket.emit('send', 'a\n');
+      });
+
+      document.getElementById('download_graph_radar').onclick = function () {
+        // Trigger the download
+        var a = document.createElement('a');
+        a.href = myChart.toBase64Image();
+        a.download = 'radar.png';
+        a.click();
+      }
+
+      document.getElementById('download_graph_cartesian').onclick = function () {
+        // Trigger the download
+        var b = document.createElement('a');
+        b.href = myChart2.toBase64Image();
+        b.download = 'cartesian.png';
+        b.click();
+      }
+      //////////////////////////////////
+      ////////// RADAR CHART////////////
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'radar',
+        data: data,
+        options: {
+          elements: {
+            line: {
+              borderWidth: 1,
+              tension: 1,
+            },
+          },
+          scales: {
+            r: {
+              grid: {
+                circular: true,
+              },
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+      socket.on('serial_message', function (data) {
+        console.log(data['message']);
+        var key = data['message']['key'];
+        var distance = data['message']['distance'];
+        var angle = data['message']['angle'];
+        var cartesian_x = data['message']['x'];
+        var cartesian_y = data['message']['y'];
+        /* myChart2.data.datasets[0].data.push({ x: cartesian_x, y: cartesian_y }); */
+        myChart2.data.datasets[0].data[key] = { x: cartesian_x, y: cartesian_y };
+        if (distance <= max_range_radar) {
+          myChart.data.datasets[0].data[key] = distance;
+        }
+        /* myChart.data.datasets[0].data[key] = distance; */
+        myChart.update();
+        myChart2.update();
+      })
+      socket.emit('send', 'a\n');
+    });
+    const label_data = new Array(32).fill('');
+    const array_empty = new Array(32).fill('');
+    var array_empty_points = [];
+    for (var i = 0; i < 32; i++) {
+      array_empty_points.push({
+        x: 0,
+        y: 0
+      });
+    }
+    /* array_random = Array.from({ length: 32 }, () => Math.floor(Math.random() * 40));
+    console.log(array_random); */
+    const data = {
+      labels: label_data,
+      datasets: [{
+        label: 'Mapeo',
+        data: array_empty,
+        fill: true,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgb(255, 99, 132)',
+        pointBackgroundColor: 'rgb(255, 99, 132)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgb(255, 99, 132)'
+      }]
+    };
+
+  </script>
+  <script>
+    $('#range_cartesian_button').click(function (event) {
+      max_range_cartesian = parseInt($("#range_cartesian").val());
+      myChart2.options.scales.x.min = -max_range_cartesian;
+      myChart2.options.scales.x.max = max_range_cartesian;
+      myChart2.options.scales.y.min = -max_range_cartesian;
+      myChart2.options.scales.y.max = max_range_cartesian;
+      myChart2.update();
+    });
+    const ctx2 = document.getElementById('myChart2').getContext('2d');
+    var myChart2 = new Chart(ctx2, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: '', // Name the series
+          data: array_empty_points, // Specify the data values array
+          borderColor: '#2196f3', // Add custom color border            
+          backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Coordenadas cartesianas'
+          }
+        },
+        scales: {
+          x: {
+            position: 'center',
+            min: -500,
+            max: 500,
+          },
+          y: {
+            position: 'center',
+            min: -500,
+            max: 500,
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -138,8 +138,14 @@ int main(void)
 		 for(int i=0;i<STEP;i++){
 			 //mod = (i+1) % 16;
 			 cli();
-			
-			 
+			 CH = UART_get();
+			 if (CH == STOP)
+			 {
+				 do
+				 {
+					 CH = UART_get();
+				 } while (CH != START);
+			 }
 			 if	 (mod == 0){
 				 sei();
 				 setTrigger();
@@ -157,15 +163,15 @@ int main(void)
 				 // Send Data
 				 dtostrf(aMotor,8,4,BUFF);
 				 dtostrf(distancia,8,4,BUFF2);
-				 if(cont==32){
-					  sprintf(cadena,"\n\r%d|%s|%s|%d\r\n",0 ,BUFF ,BUFF2,i);
-				 }else{
+				 if (cont == 32)
+				 {
+					 sprintf(cadena,"\n\r%d|-%s|%s|%d\r\n",0 ,BUFF ,BUFF2,i);
+				 }
+				 else{
 					 sprintf(cadena,"\n\r%d|-%s|%s|%d\r\n",cont ,BUFF ,BUFF2,i);
 				 }
-				 
 				 UART_String(cadena);
 				 cont = cont - 1;
-				 
 			 }
 			mod++;
 			if(mod==16){
